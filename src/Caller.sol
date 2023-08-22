@@ -5,6 +5,8 @@ import "forge-std/console.sol";
 
 import "openzeppelin-contracts/contracts/utils/Create2.sol";
 
+import "./lib/LibSandbox.sol";
+
 error NotAuthorized();
 
 contract Caller {
@@ -19,7 +21,7 @@ contract Caller {
         address _sandbox = sandbox();
 
         if (_sandbox.code.length == 0) {
-            Create2.deploy(0, keccak256("sandbox"), sandboxBytecode());
+            Create2.deploy(0, keccak256("sandbox"), LibSandbox.bytecode(address(this)));
         }
 
         bytes memory payload = abi.encodePacked(to, data);
@@ -47,12 +49,8 @@ contract Caller {
         }
     }
 
-    function sandboxBytecode() public view returns (bytes memory) {
-        return abi.encodePacked(sandboxHeader, address(this), sandboxFooter);
-    }
-
     function sandbox() public view returns (address) {
-        return Create2.computeAddress(keccak256("sandbox"), keccak256(sandboxBytecode()));
+        return Create2.computeAddress(keccak256("sandbox"), keccak256(LibSandbox.bytecode(address(this))));
     }
 
     function _isOwnerOrSandbox(address caller) internal view returns (bool) {

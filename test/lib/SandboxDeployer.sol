@@ -23,7 +23,6 @@ contract SandboxDeployer is Test {
     ///@param fileName - The file name of the Yul contract. For example, the file name for "Example.yul" is "Example"
     ///@param owner - The address which owns the sandbox
     ///@return deployedAddress - The address that the contract was deployed to
-
     function deployContract(string memory fileName, address owner) public returns (address) {
         bytes memory bytecode = getBytecode(fileName, owner);
 
