@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "forge-std/console.sol";
-
 import "openzeppelin-contracts/contracts/utils/Create2.sol";
 
 import "./lib/LibSandbox.sol";
 
 error NotAuthorized();
 
-contract Caller {
+contract ExampleCaller {
     bytes constant sandboxHeader = hex"605180600d600039806000f3fe73";
     bytes constant sandboxFooter =
         hex"33146027576382b429006000526004601cfd5b363d3d373d3d6014360360143d5160601c5af46047573d6000803e3d6000fd5b3d6000803e3d6000f3";

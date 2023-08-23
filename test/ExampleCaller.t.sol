@@ -4,14 +4,14 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 
 import "./lib/TestImplementation.sol";
-import "../src/Caller.sol";
+import "../src/ExampleCaller.sol";
 
-contract CallerTest is Test {
-    Caller public caller;
+contract ExampleCallerTest is Test {
+    ExampleCaller public caller;
     TestImplementation public _tester;
 
     function setUp() public {
-        caller = new Caller();
+        caller = new ExampleCaller();
         _tester = new TestImplementation();
     }
 

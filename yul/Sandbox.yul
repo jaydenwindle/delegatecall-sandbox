@@ -8,13 +8,13 @@ object "Sandbox" {
         code {
             // revert if caller is not owner
             if iszero(eq(caller(), 0xffffffffffffffffffffffffffffffffffffffff)) {
-                mstore(0, 0x82b42900) // `Unauthorized()`.
-                revert(0x1c, 0x04)
+                revert(returndatasize(), returndatasize())
             }
 
             // copy calldata to memory
             calldatacopy(returndatasize(), returndatasize(), calldatasize())
 
+            // execute delegatecall
             let success := delegatecall(
                 gas(),
                 shr(96, mload(returndatasize())),
@@ -24,9 +24,9 @@ object "Sandbox" {
                 returndatasize()
             )
 
+            // copy returndata to memory
             returndatacopy(0, 0, returndatasize())
 
-            // execute delegatecall
             if iszero(success) {
                 // delegatecall failed, revert and bubble up error
                 revert(0, returndatasize())

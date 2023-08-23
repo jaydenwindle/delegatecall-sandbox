@@ -7,6 +7,7 @@ import "openzeppelin-contracts/contracts/utils/Create2.sol";
 
 import "./lib/TestImplementation.sol";
 import "./lib/SandboxDeployer.sol";
+import "../src/lib/LibSandbox.sol";
 
 contract SandboxTest is Test {
     TestImplementation public _tester;
@@ -25,15 +26,16 @@ contract SandboxTest is Test {
         address sandbox = sandboxDeployer.deployContract("Sandbox", address(this));
 
         console.logBytes(sandbox.code);
+        console.logBytes(LibSandbox.bytecode(address(this)));
 
-        bytes memory appendedAddress = new bytes(20);
+        bytes memory owner = new bytes(20);
 
         assembly {
             // copy hardcoded owner address
-            extcodecopy(sandbox, add(appendedAddress, 0x20), 1, 20)
+            extcodecopy(sandbox, add(owner, 0x20), 1, 20)
         }
 
-        assertEq(address(uint160(uint256(bytes32(appendedAddress)) >> 96)), address(this));
+        assertEq(address(uint160(uint256(bytes32(owner)) >> 96)), address(this));
     }
 
     function testSandboxDelegatecall() public {
@@ -69,6 +71,6 @@ contract SandboxTest is Test {
             sandbox.call(abi.encodePacked(address(_tester), abi.encodeWithSignature("custom()")));
 
         assertEq(success, false);
-        assertEq(result, abi.encodeWithSignature("Unauthorized()"));
+        assertEq(result, "");
     }
 }
