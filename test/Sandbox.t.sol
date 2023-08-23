@@ -73,4 +73,14 @@ contract SandboxTest is Test {
         assertEq(success, false);
         assertEq(result, "");
     }
+
+    function testSandboxRevert() public {
+        address sandbox = sandboxDeployer.deploy(address(this));
+
+        (bool success, bytes memory result) =
+            sandbox.call(abi.encodePacked(address(_tester), abi.encodeWithSignature("bork()")));
+
+        assertEq(success, false);
+        assertEq(bytes4(result), UhOhBork.selector);
+    }
 }

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+error UhOhBork();
+
 contract TestImplementation {
     function custom() public pure returns (uint256) {
         return 12345;
@@ -22,5 +24,9 @@ contract TestImplementation {
         assembly {
             sstore(0, attacker)
         }
+    }
+
+    function bork() external pure {
+        revert UhOhBork();
     }
 }
