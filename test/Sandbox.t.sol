@@ -18,12 +18,12 @@ contract SandboxTest is Test {
     }
 
     function testCompileSandbox() public {
-        console.logBytes(sandboxDeployer.getHeaderBytecode("Sandbox"));
-        console.logBytes(sandboxDeployer.getFooterBytecode("Sandbox"));
+        console.logBytes(sandboxDeployer.getHeaderBytecode());
+        console.logBytes(sandboxDeployer.getFooterBytecode());
     }
 
     function testSandboxDeployment() public {
-        address sandbox = sandboxDeployer.deployContract("Sandbox", address(this));
+        address sandbox = sandboxDeployer.deploy(address(this));
 
         console.logBytes(sandbox.code);
         console.logBytes(LibSandbox.bytecode(address(this)));
@@ -39,7 +39,7 @@ contract SandboxTest is Test {
     }
 
     function testSandboxDelegatecall() public {
-        address sandbox = sandboxDeployer.deployContract("Sandbox", address(this));
+        address sandbox = sandboxDeployer.deploy(address(this));
 
         bytes memory payload = abi.encodePacked(address(_tester), abi.encodeWithSignature("custom()"));
 
@@ -50,7 +50,7 @@ contract SandboxTest is Test {
     }
 
     function testSandboxStorage() public {
-        address sandbox = sandboxDeployer.deployContract("Sandbox", address(this));
+        address sandbox = sandboxDeployer.deploy(address(this));
 
         bytes memory payload =
             abi.encodePacked(address(_tester), abi.encodeWithSignature("exploit(address)", vm.addr(1337)));
@@ -64,7 +64,7 @@ contract SandboxTest is Test {
     }
 
     function testSandboxPermissions() public {
-        address sandbox = sandboxDeployer.deployContract("Sandbox", address(this));
+        address sandbox = sandboxDeployer.deploy(address(this));
 
         vm.prank(vm.addr(1));
         (bool success, bytes memory result) =
