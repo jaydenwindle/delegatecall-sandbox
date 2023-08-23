@@ -15,24 +15,24 @@ object "Sandbox" {
             // copy calldata to memory
             calldatacopy(returndatasize(), returndatasize(), calldatasize())
 
+            let success := delegatecall(
+                gas(),
+                shr(96, mload(returndatasize())),
+                20,
+                sub(calldatasize(), 20),
+                returndatasize(),
+                returndatasize()
+            )
+
+            returndatacopy(0, 0, returndatasize())
+
             // execute delegatecall
-            if iszero(
-                delegatecall(
-                    gas(),
-                    shr(96, mload(returndatasize())),
-                    20,
-                    sub(calldatasize(), 20),
-                    returndatasize(),
-                    returndatasize()
-                )
-            ) {
+            if iszero(success) {
                 // delegatecall failed, revert and bubble up error
-                returndatacopy(0, 0, returndatasize())
                 revert(0, returndatasize())
             }
 
             // delegatecall succeeded, return result
-            returndatacopy(0, 0, returndatasize())
             return(0, returndatasize())
         }
     }
